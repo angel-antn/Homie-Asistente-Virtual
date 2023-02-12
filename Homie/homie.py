@@ -33,7 +33,7 @@ def hablar(mensaje):
     os.remove('Sounds/respuesta.mp3')
 
 
-def init_homie():
+def init_homie(gui_object):
     primera_vuelta = True
     hablar('hola soy Homie, tu asistente domótico')
 
@@ -95,6 +95,12 @@ def init_homie():
             nombre = order.replace('quiero escuchar ', '')
             pywhatkit.playonyt(topic=nombre, use_api=False, open_video=True)
 
+        elif 'quiero jugar' in order\
+                or 'blackjack' in order or 'black jack' in order or '21' in order or 'veintiuno' in order:
+            hablar('Juguemos blackjack')
+            from Homie.homie_blackjack import HomieBlackjack
+            HomieBlackjack(gui_object)
+
         elif 'pronóstico del clima' in order and 'en' in order:
 
             hablar('entendido, dame un momento')
@@ -139,8 +145,9 @@ def init_homie():
             hablar('entendido, dame un momento')
             try:
                 hablar(get_horoscopo(signo))
-            except Exception:
+            except Exception as e:
                 hablar(f'Lo siento, no he podido conseguir el horóscopo de {signo}')
+                print(e)
 
         elif 'busca en wikipedia' in order:
 
@@ -148,15 +155,17 @@ def init_homie():
             hablar('entendido, dame un momento')
             try:
                 hablar(get_wiki(buscar))
-            except Exception:
+            except Exception as e:
                 hablar(f'Lo siento, no he podido conseguir nada en wikipedia acerca de {buscar}')
+                print(e)
 
-        elif 'precio del dólar' in order:
+        elif 'precio del dólar' in order or 'en cuánto está el dólar' in order:
 
             try:
                 hablar(get_dolar_bcv())
-            except Exception:
+            except Exception as e:
                 hablar(f'Lo siento, no he podido conseguir el precio del dólar')
+                print(e)
 
         elif 'cuánto son' in order and '$' in order:
 
@@ -206,16 +215,25 @@ def init_homie():
                 hablar(f'Lo siento, no he podido conseguir el precio de {text} euros')
                 print(e)
 
-        elif 'precio del euro' in order:
+        elif 'precio del euro' in order or 'en cuánto está el euro' in order:
 
             try:
                 hablar(get_euro_bcv())
-            except Exception:
+            except Exception as e:
                 hablar(f'Lo siento, no he podido conseguir el precio del euro')
+                print(e)
 
-        elif order in 'quién es la más linda':
+        elif 'quién es la más linda' in order:
 
             hablar('obviamente yo')
+
+        elif 'cambia el modo' in order or 'cambia de modo' in order or 'cambia el tema' in order\
+                or 'cambia de tema' in order:
+            gui_object.update_theme()
+            if gui_object.theme == 0:
+                hablar('modo claro activado')
+            else:
+                hablar('modo oscuro activado')
 
         elif 'nada' in order:
 

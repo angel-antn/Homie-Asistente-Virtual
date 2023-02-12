@@ -1,7 +1,8 @@
 import sys
-
-from GUI.gui import init_gui
+from tkinter import mainloop
+from GUI.gui import Gui
 
 if __name__ == '__main__':
-    init_gui()
+    gui = Gui()
+    mainloop()
     sys.exit()
